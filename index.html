@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For You 💙</title>
+    <!-- Google Fonts for luxurious and script typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- GLOBAL & LUXURIOUS THEME --- */
+        :root {
+            --bg-dark: #020b1a;
+            --bg-blue: #0a1f3f;
+            --gold: #d4af37;
+            --gold-light: #fceea7;
+            --gold-glow: rgba(212, 175, 55, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            /* Prevents weird highlighting when tapping on mobile */
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at center, var(--bg-blue) 0%, var(--bg-dark) 100%);
+            color: var(--gold-light);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- LOGIN SCREEN --- */
+        #login-screen {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(2, 11, 26, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 1s ease-out;
+        }
+
+        .login-box {
+            background: linear-gradient(145deg, rgba(10,31,63,0.8), rgba(2,11,26,0.9));
+            border: 2px solid var(--gold);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 0 30px var(--gold-glow);
+            animation: float 4s ease-in-out infinite;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .login-box h2 {
+            color: var(--gold);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+        }
+
+        input[type="password"], input[type="text"] {
+            width: 90%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--gold);
+            background: rgba(2, 11, 26, 0.6);
+            color: var(--gold-light);
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            font-size: 1rem;
+            outline: none;
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            box-shadow: 0 0 15px var(--gold-glow);
+        }
+
+        button {
+            background: var(--gold);
+            color: var(--bg-dark);
+            border: none;
+            padding: 10px 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        button:hover {
+            background: var(--gold-light);
+            box-shadow: 0 0 20px var(--gold-glow);
+            transform: scale(1.05);
+        }
+
+        .error-msg {
+            color: #ff4d4d;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        /* --- OS DESKTOP --- */
+        #os-desktop {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: none;
+            opacity: 0;
+            flex-direction: column;
+            transition: opacity 1s ease-in;
+        }
+
+        .top-bar {
+            height: 40px;
+            background: rgba(10, 31, 63, 0.8);
+            border-bottom: 1px solid var(--gold);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .apps-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .app-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .app-icon:hover {
+            transform: translateY(-10px) scale(1.1);
+        }
+
+        .icon-box {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--gold), #8a6d1c);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            color: var(--bg-dark);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+
+        .app-icon span {
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        /* --- OS WINDOW MODAL --- */
+        .window-modal {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 650px;
+            max-width: 95%;
+            background: var(--bg-blue);
+            border: 2px solid var(--gold);
+            border-radius: 15px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 50;
+            overflow: hidden;
+        }
+
+        .window-modal.active {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .window-header {
+            height: 35px;
+            background: var(--gold);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            color: var(--bg-dark);
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: #ff4d4d;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .window-body {
+            padding: 20px 30px;
+            height: auto;
+            min-height: 400px;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- LETTER STYLES --- */
+        #letter-content {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.3rem; 
+            line-height: 1.6;
+            color: var(--gold-light);
+            text-align: center;
+            white-space: pre-wrap;
+            width: 100%;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.3rem;
+            background-color: var(--gold);
+            animation: blink 0.8s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* --- GAME STYLES --- */
+        .game-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .puzzle-instructions {
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+            color: var(--gold);
+            text-align: center;
+        }
+
+        #puzzle-board {
+            display: grid;
+            grid-template-columns: repeat(3, 80px);
+            grid-template-rows: repeat(3, 80px);
+            gap: 2px;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid var(--gold);
+            padding: 2px;
+            margin-bottom: 15px;
+        }
+
+        .slot {
+            width: 80px;
+            height: 80px;
+            background: rgba(10, 31, 63, 0.5);
+            border: 1px dashed var(--gold);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #pieces-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+            width: 100%;
+            min-height: 90px;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .piece {
+            width: 80px;
+            height: 80px;
+            background-image: url('us.png');
+            background-size: 240px 240px; 
+            cursor: grab;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            border: 1px solid var(--gold);
+            /* Important for mobile touch smoothness */
+            touch-action: none; 
+        }
+
+        .piece:active { cursor: grabbing; }
+
+        #win-message {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .win-title {
+            font-family: 'Dancing Script', cursive;
+            color: #fff;
+            font-size: 2rem;
+            text-shadow: 0 0 10px var(--gold);
+        }
+
+        .win-story {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            color: var(--gold-light);
+            margin-top: 10px;
+            line-height: 1.5;
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. LOGIN SCREEN -->
+    <div id="login-screen">
+        <div class="login-box">
+            <h2>Enter our sports 🏸</h2>
+            <input type="text" id="password-input" placeholder="Type here..." autocomplete="off">
+            <br>
+            <button onclick="checkPassword()">Unlock</button>
+            <div class="error-msg" id="error-msg">Hmm, that doesn't seem right... Try again!</div>
+        </div>
+    </div>
+
+    <!-- 2. OS DESKTOP -->
+    <div id="os-desktop">
+        <div class="top-bar">
+            <div id="clock">12:00 AM</div>
+            <div>Our Little Space OS</div>
+        </div>
+        
+        <div class="apps-container">
+            <div class="app-icon" onclick="openWindow('letter-window')">
+                <div class="icon-box">💌</div>
+                <span>Letter</span>
+            </div>
+            
+            <div class="app-icon" onclick="openWindow('game-window')">
+                <div class="icon-box">🧩</div>
+                <span>Game</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. LETTER WINDOW MODAL -->
+    <div id="letter-window" class="window-modal">
+        <div class="window-header">
+            <span>A Message For You</span>
+            <div class="close-btn" onclick="closeWindow('letter-window')"></div>
+        </div>
+        <div class="window-body">
+            <div id="letter-content"></div><span class="cursor" id="type-cursor"></span>
+        </div>
+    </div>
+
+    <!-- 4. GAME WINDOW MODAL -->
+    <div id="game-window" class="window-modal">
+        <div class="window-header">
+            <span>Our Memory Puzzle</span>
+            <div class="close-btn" onclick="closeWindow('game-window')"></div>
+        </div>
+        <div class="window-body">
+            <div class="game-wrapper">
+                <div class="puzzle-instructions">Drag the pieces with your mouse or finger to complete our photo!</div>
+                <div id="puzzle-board"></div>
+                <div id="pieces-bank"></div>
+                
+                <div id="win-message">
+                    <div class="win-title">You completed us! 💙✨</div>
+                    <div class="win-story">That's the second picture of us at NEUST OVAL on UMEET 2024. I called you even though we weren't completely closed at the time since i was too scared/shy to approach you and i had no other option due to my phone damn</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* --- CLOCK LOGIC --- */
+        function updateTime() {
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById('clock').innerText = hours + ':' + minutes + ' ' + ampm;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        /* --- PASSWORD LOGIC --- */
+        function checkPassword() {
+            const input = document.getElementById('password-input').value.trim().toLowerCase();
+            const errorMsg = document.getElementById('error-msg');
+            
+            if (input === 'badminton') {
+                document.getElementById('login-screen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('login-screen').style.display = 'none';
+                    const desktop = document.getElementById('os-desktop');
+                    desktop.style.display = 'flex';
+                    void desktop.offsetWidth;
+                    desktop.style.opacity = '1';
+                }, 1000);
+            } else {
+                errorMsg.style.opacity = '1';
+                setTimeout(() => { errorMsg.style.opacity = '0'; }, 3000);
+            }
+        }
+
+        document.getElementById('password-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') checkPassword();
+        });
+
+        /* --- WINDOW MANAGEMENT --- */
+        let typingTimeout;
+        function openWindow(windowId) {
+            document.getElementById(windowId).classList.add('active');
+            
+            if (windowId === 'letter-window') {
+                startTypingLetter();
+            } else if (windowId === 'game-window') {
+                initPuzzle();
+            }
+        }
+
+        function closeWindow(windowId) {
+            document.getElementById(windowId).classList.remove('active');
+            if (windowId === 'letter-window') {
+                clearTimeout(typingTimeout);
+                document.getElementById('letter-content').innerHTML = '';
+            }
+        }
+
+        /* --- TYPING LETTER LOGIC --- */
+        const myLetter = "Hey you,\n\nI made this little digital space just for us.\n\nYou make me smile in a way nobody else does.\nEvery moment with you is my favorite.\n\n I’ve been trying to figure out how to give you the space you asked for without making it seem like i'm pulling away kaya for now, i’m choosing to step back muna and stay quiet not because i want to but because i respect your peace and kung ano talaga yung kailangan mo sa moment na ’to. I don’t want there to be any misunderstanding, my silence isn't me giving up or losing interest it’s actually the opposite. I care about you enough to set aside my own urge na kausapin ka, just so I can give you the space and comfort you need, i never want you to doubt where i stand or what my intentions are nandito pa rin ako, Em. i’m still choosing you and i’m still committed to being someone you can rely on, no matter what happens. I’ll be honest, the silence feels really heavy, i miss our conversations more than i can put into words but as much as i miss you, I’m more than happy to wait. I'll be right here waiting for things and hoping that when you’re ready, we can find our way back to how things were. You're worth every second of the wait, Always \n\nYours truly.";
+         
+        let charIndex = 0;
+        function startTypingLetter() {
+            document.getElementById('letter-content').innerHTML = '';
+            charIndex = 0;
+            document.getElementById('type-cursor').style.display = 'inline-block';
+            typeNextChar();
+        }
+
+        function typeNextChar() {
+            if (charIndex < myLetter.length) {
+                const char = myLetter.charAt(charIndex);
+                if (char === '\n') {
+                    document.getElementById('letter-content').innerHTML += '<br>';
+                } else {
+                    document.getElementById('letter-content').innerHTML += char;
+                }
+                charIndex++;
+                typingTimeout = setTimeout(typeNextChar, 50); 
+            } else {
+                document.getElementById('type-cursor').style.display = 'none';
+            }
+        }
+
+        /* --- PUZZLE GAME LOGIC (PC & MOBILE TOUCH SUPPORT) --- */
+        let draggedPiece = null;
+        let correctPieces = 0;
+        
+        // Touch variables
+        let touchOffsetX = 0;
+        let touchOffsetY = 0;
+
+        function initPuzzle() {
+            const board = document.getElementById('puzzle-board');
+            const bank = document.getElementById('pieces-bank');
+            document.getElementById('win-message').style.display = 'none';
+            bank.style.display = 'flex';
+            board.innerHTML = '';
+            bank.innerHTML = '';
+            correctPieces = 0;
+
+            let piecesArray = [];
+
+            for (let i = 0; i < 9; i++) {
+                // 1. Create Target Slots
+                let slot = document.createElement('div');
+                slot.classList.add('slot');
+                slot.dataset.index = i;
+                
+                // Desktop drop events
+                slot.addEventListener('dragover', (e) => e.preventDefault());
+                slot.addEventListener('drop', handleDrop);
+                board.appendChild(slot);
+
+                // 2. Create Pieces
+                let piece = document.createElement('div');
+                piece.classList.add('piece');
+                piece.draggable = true;
+                piece.dataset.index = i;
+                
+                let x = (i % 3) * -80;
+                let y = Math.floor(i / 3) * -80;
+                piece.style.backgroundPosition = `${x}px ${y}px`;
+
+                // --- DESKTOP EVENTS ---
+                piece.addEventListener('dragstart', (e) => {
+                    draggedPiece = piece;
+                    setTimeout(() => piece.style.opacity = '0.5', 0);
+                });
+                piece.addEventListener('dragend', (e) => {
+                    draggedPiece = null;
+                    piece.style.opacity = '1';
+                });
+
+                // --- MOBILE TOUCH EVENTS ---
+                piece.addEventListener('touchstart', handleTouchStart, { passive: false });
+                piece.addEventListener('touchmove', handleTouchMove, { passive: false });
+                piece.addEventListener('touchend', handleTouchEnd);
+
+                piecesArray.push(piece);
+            }
+
+            piecesArray.sort(() => Math.random() - 0.5).forEach(p => bank.appendChild(p));
+        }
+
+        /* DESKTOP DROP LOGIC */
+        function handleDrop(e) {
+            e.preventDefault();
+            const slot = e.target;
+            if (slot.classList.contains('slot') && draggedPiece) {
+                if (slot.dataset.index === draggedPiece.dataset.index) {
+                    lockPiece(slot, draggedPiece);
+                }
+            }
+        }
+
+        /* MOBILE TOUCH LOGIC */
+        function handleTouchStart(e) {
+            draggedPiece = e.target;
+            draggedPiece.style.opacity = '0.8';
+            
+            const rect = draggedPiece.getBoundingClientRect();
+            const touch = e.touches[0];
+            touchOffsetX = touch.clientX - rect.left;
+            touchOffsetY = touch.clientY - rect.top;
+            
+            // Pop out of flow to follow finger perfectly
+            draggedPiece.style.position = 'fixed';
+            draggedPiece.style.zIndex = '9999';
+            
+            moveTouchPiece(touch.clientX, touch.clientY);
+        }
+
+        function handleTouchMove(e) {
+            if (!draggedPiece) return;
+            e.preventDefault(); // Stop the phone screen from scrolling
+            const touch = e.touches[0];
+            moveTouchPiece(touch.clientX, touch.clientY);
+        }
+
+        function moveTouchPiece(clientX, clientY) {
+            draggedPiece.style.left = (clientX - touchOffsetX) + 'px';
+            draggedPiece.style.top = (clientY - touchOffsetY) + 'px';
+        }
+
+        function handleTouchEnd(e) {
+            if (!draggedPiece) return;
+            
+            // Hide piece for a split second to see what slot is under the finger
+            draggedPiece.style.visibility = 'hidden';
+            const touch = e.changedTouches[0];
+            const elemUnderFinger = document.elementFromPoint(touch.clientX, touch.clientY);
+            draggedPiece.style.visibility = 'visible';
+
+            // Reset position to snap back to the bank if missed
+            draggedPiece.style.position = 'static';
+            draggedPiece.style.zIndex = 'auto';
+            draggedPiece.style.opacity = '1';
+            draggedPiece.style.left = 'auto';
+            draggedPiece.style.top = 'auto';
+
+            if (elemUnderFinger && elemUnderFinger.classList.contains('slot')) {
+                if (elemUnderFinger.dataset.index === draggedPiece.dataset.index) {
+                    lockPiece(elemUnderFinger, draggedPiece);
+                }
+            }
+            draggedPiece = null;
+        }
+
+        /* SHARED SUCCESS LOGIC */
+        function lockPiece(slot, piece) {
+            slot.appendChild(piece);
+            
+            // Lock it visually and functionally
+            piece.draggable = false;
+            piece.style.cursor = 'default';
+            piece.style.border = 'none';
+            slot.style.border = 'none';
+
+            // Remove touch listeners so it can't be dragged anymore
+            piece.removeEventListener('touchstart', handleTouchStart);
+            piece.removeEventListener('touchmove', handleTouchMove);
+            piece.removeEventListener('touchend', handleTouchEnd);
+
+            correctPieces++;
+
+            if (correctPieces === 9) {
+                setTimeout(() => {
+                    document.getElementById('pieces-bank').style.display = 'none';
+                    document.getElementById('win-message').style.display = 'block';
+                }, 300);
+            }
+        }
+    </script>
+</body>
+</html>
